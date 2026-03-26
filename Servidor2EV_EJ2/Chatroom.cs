@@ -54,7 +54,7 @@ namespace Servidor2EV_EJ2
                     sw.WriteLine(welcome);
                     sw.WriteLine("Escribe tu nombre de usuario:");
                     string nombre = sr.ReadLine();
-                    if (nombre != null)
+                    if (!nombre.Equals(""))
                     {
 
                         Cliente cliente = new Cliente(nombre, ieClient.Address.ToString(), sw);
@@ -82,7 +82,7 @@ namespace Servidor2EV_EJ2
 
                                     lock (l)
                                     {
-                                        clientes.Remove(cliente);
+                                        
                                         foreach (Cliente c in clientes)
                                         {
                                             c.Sw.WriteLine($"{cliente.NombreUsuario}@{cliente.Ip} se ha desconectado.");
@@ -121,7 +121,7 @@ namespace Servidor2EV_EJ2
                         {
                             lock (l)
                             {
-                                clientes.Remove(cliente);
+                                
                                 foreach (Cliente c in clientes)
                                 {
                                     c.Sw.WriteLine($"{cliente.NombreUsuario}@{cliente.Ip} se ha desconectado.");
@@ -133,7 +133,7 @@ namespace Servidor2EV_EJ2
                         {
                             lock (l)
                             {
-                                clientes.Remove(cliente);
+                                
                                 foreach (Cliente c in clientes)
                                 {
                                     c.Sw.WriteLine($"{cliente.NombreUsuario}@{cliente.Ip} se ha desconectado.");
@@ -141,6 +141,7 @@ namespace Servidor2EV_EJ2
                                 }
                             }
                         }
+                        clientes.Remove(cliente);
 
                     }
 
