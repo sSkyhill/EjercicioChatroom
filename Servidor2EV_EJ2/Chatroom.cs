@@ -15,8 +15,30 @@ namespace Servidor2EV_EJ2
         static readonly object l = new object();
         public int Port { get; set; } = 31416;
         public bool ServerRunning { get; set; } = true;
+        public int PuertoOcupado()
+        {
+            int puerto = Port;
+            while (puerto <= 65535)
+            {
+                try
+                {
+                    IPEndPoint ie = new IPEndPoint(IPAddress.Any, Port);
+                    using (Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
+                    {
+                        s.Bind(ie);
+                        return puerto;
+                    }
+                }
+                catch (SocketException e)
+                {
+                    Console.WriteLine($"Puerto{Port} ocupado");
+                    Port++;
+                }
+            }
+        }
         public void InitServer()
         {
+            PuertoOcupado();
 
             IPEndPoint ie = new IPEndPoint(IPAddress.Any, Port);
             using (Socket s = new Socket(AddressFamily.InterNetwork,
@@ -82,7 +104,7 @@ namespace Servidor2EV_EJ2
 
                                     lock (l)
                                     {
-                                        
+
                                         foreach (Cliente c in clientes)
                                         {
                                             c.Sw.WriteLine($"{cliente.NombreUsuario}@{cliente.Ip} se ha desconectado.");
@@ -121,7 +143,7 @@ namespace Servidor2EV_EJ2
                         {
                             lock (l)
                             {
-                                
+
                                 foreach (Cliente c in clientes)
                                 {
                                     c.Sw.WriteLine($"{cliente.NombreUsuario}@{cliente.Ip} se ha desconectado.");
@@ -133,7 +155,7 @@ namespace Servidor2EV_EJ2
                         {
                             lock (l)
                             {
-                                
+                                clientes.Remove(cliente);
                                 foreach (Cliente c in clientes)
                                 {
                                     c.Sw.WriteLine($"{cliente.NombreUsuario}@{cliente.Ip} se ha desconectado.");
@@ -141,7 +163,7 @@ namespace Servidor2EV_EJ2
                                 }
                             }
                         }
-                        clientes.Remove(cliente);
+
 
                     }
 
